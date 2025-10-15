@@ -1,55 +1,64 @@
 import folium
+from folium.plugins import MarkerCluster
 import geopandas as gpd
-
 
 from constants import DATA_PATH, OUTPUT_DIR
 
 # Params
-day="1"
+day = "1"
 
+api_jawg = DATA_PATH / "API_jawg.txt"  
 
-# Load cafe locations
-cafes = gpd.read_file(DATA_PATH /"cafe_montreal.geojson")
+try:
+    with open(api_jawg, 'r') as file:
+        JAWG_TOKEN = file.readline()
+except FileNotFoundError:
+    print(f"Error: The file '{api_jawg}' was not found.")
+    
 
-# Clean the json with bounding box over Montreal
-cafes_clean = cafes[
+# Load cafés
+cafes = gpd.read_file(DATA_PATH / "cafe_montreal.geojson")
+cafes = cafes[
     (cafes.geometry.y.between(44, 46)) &
     (cafes.geometry.x.between(-75, -72))
 ].copy()
+cafes["name"] = cafes["name"].fillna("Café sans nom")
 
-# Create the map
+# Create base map
 m = folium.Map(
     location=[45.5017, -73.5673],
-    zoom_start=12,
-    tiles="cartodbpositron", 
-    attr='© OpenStreetMap contributors, © CartoDB'
+    zoom_start=13,
+    min_zoom=11,  
+    max_zoom=18,
+    tiles="https://cartodb-basemaps-a.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png",
+    attr="© OpenStreetMap, © CartoDB",
+
 )
 
-# Add cafes as points
-for idx, row in cafes_clean.iterrows():
-    name = row.get("name", "Café")
-    lat = row.geometry.y
-    lon = row.geometry.x
-    folium.CircleMarker(
+# Add bean markers
+icon_path = DATA_PATH/"coffee.png"
+
+for _, row in cafes.iterrows():
+    lat, lon = row.geometry.y, row.geometry.x
+    name = row["name"]
+    icon = folium.CustomIcon(str(icon_path), icon_size=(8, 8), icon_anchor=(10, 10))
+    folium.Marker(
         location=[lat, lon],
-        radius=3,
-        color="#6F4E37",
-        fill=True,
-        fill_color="#6F4E37",
-        fill_opacity=0.7,
         popup=f"<b>{name}</b>",
-        weight=0 
+        icon=icon
     ).add_to(m)
 
-# Unable settings
-m.fit_bounds(m.get_bounds(), padding=(20, 20))
-m.options["zoomControl"] = False
-m.options["attributionControl"] = False
+# Fit to bounds
+bounds = cafes.total_bounds
+m.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
+m.options['maxBounds'] = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]]
 
-# Save the map
+# Add layer control
+folium.LayerControl().add_to(m)
+
+# Save
 output_dir = OUTPUT_DIR / f"day_{day}"
 output_dir.mkdir(parents=True, exist_ok=True)
+m.save(output_dir / "montreal_cafes.html")
 
-output_file = output_dir / "montreal_cafes.html"
-m.save(outfile=output_file)
 
