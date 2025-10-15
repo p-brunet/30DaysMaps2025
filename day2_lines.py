@@ -1,12 +1,8 @@
 import folium
 import gpxpy
-import geopandas as gpd
-from pathlib import Path
-import matplotlib.pyplot as plt
-from PIL import Image
-import numpy as np
 
 from constants import DATA_PATH, OUTPUT_DIR
+
 # Params
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
