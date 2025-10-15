@@ -75,7 +75,7 @@ legend_html = f"""
     font-size: 14px;
     z-index: 9999;
 ">
-    <b>Activity</b><br>
+    <b>Totals per Activity</b><br>
     <i style='background:{SPORT_COLORS["cycling"]}; width:30px; height:3px; display:inline-block; margin:2px 5px;'></i> Biking: {totals["cycling"]/1000:.2f} km<br>
     <i style='background:{SPORT_COLORS["running"]}; width:30px; height:3px; display:inline-block; margin:2px 5px;'></i> Running : {totals["running"]/1000:.2f} km<br>
 </div>
