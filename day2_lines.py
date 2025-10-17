@@ -5,6 +5,7 @@ from constants import DATA_PATH, OUTPUT_DIR
 
 # Params
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+day = 2
 
 # Color per sport
 SPORT_COLORS = {
@@ -84,9 +85,7 @@ m.get_root().html.add_child(folium.Element(legend_html))
 folium.LayerControl().add_to(m)
 
 # Save map
-m.save(OUTPUT_DIR / "traces_interactive.html")
+m.save(OUTPUT_DIR / f"day_{day}" / "summer_strava_activity.html")
 
-
-
-print(f"Map save : {OUTPUT_DIR / 'traces_interactive.html'}")
+print(f"Map save : {OUTPUT_DIR / "day_{day}" / "summer_strava_activity.html"}")
 print(f"Totals : Cycling = {totals['cycling']/1000:.2f} km, Running = {totals['running']/1000:.2f} km")
