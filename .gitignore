@@ -3,3 +3,4 @@ data
 .DS_Store
 outputs
 __pycache__
+cache
