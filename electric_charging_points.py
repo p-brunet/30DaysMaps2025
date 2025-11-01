@@ -16,7 +16,7 @@ def create_map(geojson_data: dict, use_cluster: bool = True) -> folium.Map:
     """Create Folium map with charging stations"""
     features = geojson_data.get('features', [])
     
-    # Centre de Montréal
+    # Center of Montréal
     m = folium.Map(location=[45.5017, -73.5673], 
                    zoom_start=12,
                    tiles="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
@@ -43,13 +43,33 @@ def create_map(geojson_data: dict, use_cluster: bool = True) -> folium.Map:
         else:
             folium.CircleMarker(
                 location=[lat, lon],
-                radius=5,
+                radius=4,
                 popup=folium.Popup(popup, max_width=300),
                 color='green',
                 fill=True,
                 fillColor='green',
-                fillOpacity=0.7
+                fillOpacity=0.6,
+                opacity=.8,
             ).add_to(container)
+    # Legend
+    legend_html = f"""
+    <div id='legend' style="
+        position: fixed;
+        bottom: 50px; left: 50px;
+        background-color: white;
+        border: 2px solid lightgray;
+        border-radius: 10px;
+        padding: 8px 12px;
+        box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+        font-size: 14px;
+        z-index: 9999;
+    ">
+        <b>Total of Charging Points : {len(geojson_data['features'])}</b>
+        <p style="margin: 0;"><span style="color: green; font-size: 25px">●</span> Charging Station</p>
+    </div>
+    """
+    container.get_root().html.add_child(folium.Element(legend_html))
+    folium.LayerControl().add_to(container)
     
     return m
 
