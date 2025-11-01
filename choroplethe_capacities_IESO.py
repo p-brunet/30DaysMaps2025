@@ -77,7 +77,7 @@ def create_folium_map(gdf, column, title, output_dir, filename, cmap_type='total
         else:
             return {
                 'fillColor': colormap(value),
-                'color': 'black',
+                'color': 'white',
                 'weight': 1,
                 'fillOpacity': 0.7
             }
@@ -89,10 +89,10 @@ def create_folium_map(gdf, column, title, output_dir, filename, cmap_type='total
     ).add_to(m)
 
     colormap.add_to(m)
-    CSS = "font-size: 14px; fill: white;"
-    m.get_root().header.add_child(
-        folium.Element(f"<style>#legend > g > text.caption {{{CSS}}}</style>")
-    )
+    CSS = """
+    #legend text { fill: white !important; font-size: 14px; }
+    """
+    m.get_root().header.add_child(folium.Element(f"<style>{CSS}</style>"))
 
     m.save(output_dir / f"{filename}.html")
 
