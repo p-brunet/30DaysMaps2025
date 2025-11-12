@@ -51,7 +51,7 @@ legend_html = f"""
     font-size: 14px;
     z-index: 9999;
 ">
-    <img src='{icon_path.as_posix()}' style="width:10px; height:10px; vertical-align:middle; margin-right:6px;">
+    <img src='{icon_path.as_posix()}' style="width:10px; height:10px; vertical-align:left; margin-right:6px;">
     <b>Coffee Place</b>
 </div>
 """
