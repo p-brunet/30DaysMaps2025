@@ -191,8 +191,7 @@ def main():
     # Save map
     m.save('ieso_zones_map.html')
     
-    print("✓ Map saved: ieso_zones_map.html")
-    print("\nOpen ieso_zones_map.html in your browser to view the map!")
+    print("Map saved: ieso_zones_map.html")
     
     # Print zone summary
     print("\n" + "="*60)
