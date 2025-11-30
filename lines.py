@@ -33,10 +33,8 @@ def create_line_map(gdf, filename):
     Create and save an interactive folium map with a basemap no label
     """
    
-    # Extract the first geometry
     geom = gdf.iloc[0].geometry
 
-    # Handle both MultiLineString and LineString
     lines = []
     if isinstance(geom, MultiLineString):
         lines = list(geom.geoms)
@@ -59,7 +57,7 @@ def create_line_map(gdf, filename):
 
     line_name = "HVDC Interconnection Line Radisson Qc - Sandy Pond Ma - 450 kV"
 
-    # Add each line segment
+    # Add segment
     for idx, line in enumerate(sublines, start=1):
         seg_km = segment_lengths[idx - 1] / 1000
         seg_miles = seg_km * 0.621371
@@ -85,13 +83,12 @@ def create_line_map(gdf, filename):
             tooltip=folium.Tooltip(tooltip_text, sticky=True)
         ).add_to(m)
 
-    # Center map to geometry bounds
+    
     m.fit_bounds([
         [geom.bounds[1], geom.bounds[0]],  # south-west
         [geom.bounds[3], geom.bounds[2]]   # north-east
     ])
 
-    # Optional title
     name = gdf.iloc[0].get('id', 'Line Feature')
     title_html = f'<h3 align="center" style="font-size:16px"><b>{name}</b></h3>'
     m.get_root().html.add_child(folium.Element(title_html)) 
@@ -118,7 +115,7 @@ def create_line_map(gdf, filename):
 
 
 if __name__ == '__main__':
-    day = 2
+    day = 27
     output_dir = OUTPUT_DIR / f'day_{day}'
     output_dir.mkdir(parents=True, exist_ok=True)
     
